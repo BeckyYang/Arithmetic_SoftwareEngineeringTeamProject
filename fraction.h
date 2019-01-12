@@ -1,7 +1,9 @@
 /*
-------------------------
-л��ѩ ѧ�ţ�1120161761
-------------------------
+----------------------------------
+谢蜜雪 学号：1120161761
+日期：2019/1/12
+实现功能：分数的类fraction的头文件
+----------------------------------
 */
 
 #pragma once
@@ -13,18 +15,17 @@ using namespace std;
 class fraction
 {
 	private:
-		int numerator; //����
-		int denominator; //��ĸ
+		int numerator; //分子
+		int denominator; //分母
 
 	public:
 		fraction(int x = 0, int y = 1);  
-		//friend fraction operator +(fraction a, fraction b);
-		//friend fraction operator -(fraction a, fraction b);
-		//friend fraction operator *(fraction a, fraction b);
-		//friend fraction operator /(fraction a, fraction b);
-		//friend fraction operator ^(fraction a, fraction b);
-		fraction& operator = (fraction a);
 		int GetNumerator();
 		int GetDenominator();
-
+		friend fraction& operator +(fraction &A, fraction &B);
+		friend fraction& operator -(fraction &A, fraction &B);
+		friend fraction& operator *(fraction &A, fraction &B);
+		friend fraction& operator /(fraction &A, fraction &B);
+		friend int operator <(fraction&A, fraction &B);
+		friend int FracionGetGCD(int a, int b); //求分子分母的最大公约数
 };
