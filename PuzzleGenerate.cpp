@@ -22,7 +22,6 @@
 #include <functional>
 using namespace std;
 
-char symbols[8][3] = { "+", "-", "*", "/", "^", "**", "(", ")"};
 vector <string> puzzle_string(1000);
 int puzzle_int[1000][600];
 int labels[1000];
