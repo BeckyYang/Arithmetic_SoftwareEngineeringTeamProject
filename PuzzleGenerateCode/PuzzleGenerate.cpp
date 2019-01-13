@@ -1,7 +1,7 @@
 /*
 ---------------------------------------
 谢蜜雪 学号：1120161761
-日期：2019/1/12
+日期：2019/1/13
 实现功能：生成N个type类型的四则运算题目
 ---------------------------------------
 */
@@ -119,7 +119,7 @@ fraction& FractionPartialResult(fraction &A, fraction& B, int sym) // 两个分�
 	else return A / B;
 }
 
-int check(int puzzle[], int puzzle_len, int puzzle_num, int num_type) //判断题目是否重复
+int Check(int puzzle[], int puzzle_len, int puzzle_num, int num_type) //判断题目是否重复
 {
 	int i, j, L = 1, s, A, B, t, first = 0;
 	fraction FA, FB, Ft;
@@ -127,6 +127,7 @@ int check(int puzzle[], int puzzle_len, int puzzle_num, int num_type) //判断�
 	stack<fraction> stack_fraction;
 	stack<int> stack_operator;
 	int order[600];
+	memset(order, 0, sizeof(order));
 	/********整数表达式*******/
 	if (num_type == 0)
 	{
@@ -147,9 +148,9 @@ int check(int puzzle[], int puzzle_len, int puzzle_num, int num_type) //判断�
 				{
 					if (!stack_operator.empty())
 					{
-						s = stack_operator.top(); //运算符出栈
 						do
 						{
+							s = stack_operator.top(); //运算符出栈
 							stack_operator.pop();
 							B = stack_integer.top(); //操作数B出栈
 							stack_integer.pop();
@@ -167,12 +168,12 @@ int check(int puzzle[], int puzzle_len, int puzzle_num, int num_type) //判断�
 							order[L++] = A;
 							order[L++] = s;
 							order[L++] = B;
-							if (s == 103 && B == 0)
+							if ((s == 103 && B == 0) || ((s == 104 || s == 105) && A == 0 && B == 0))
 							{
 								return -1;
 							}
 							stack_integer.push(IntPartialResult(A, B, s)); //运算结果入栈
-						} while (stack_operator.empty() == false && (s = stack_operator.top()) != 106);
+						} while (stack_operator.empty() == false && stack_operator.top() != 106);
 						if (!stack_operator.empty()) stack_operator.pop(); //弹出左括号
 					}
 				}
@@ -205,7 +206,7 @@ int check(int puzzle[], int puzzle_len, int puzzle_num, int num_type) //判断�
 								order[L++] = A;
 								order[L++] = s;
 								order[L++] = B;
-								if (s == 103 && B == 0)
+								if ((s == 103 && B == 0) || ((s == 104 || s == 105) && A == 0 && B == 0))
 								{
 									return -1;
 								}
@@ -236,12 +237,12 @@ int check(int puzzle[], int puzzle_len, int puzzle_num, int num_type) //判断�
 				order[L++] = A;
 				order[L++] = s;
 				order[L++] = B;
-				if (s == 103 && B == 0)
+				if ((s == 103 && B == 0) || ((s == 104 || s == 105) && A == 0 && B == 0))
 				{
 					return -1;
 				}
 				stack_integer.push(IntPartialResult(A, B, s)); //运算结果入栈
-			} while (stack_operator.empty() == false);
+			}while (stack_operator.empty() == false);
 		}
 		order[0] = L;
 	}
@@ -401,7 +402,7 @@ void PuzzleGenerate(char* argv, int N, char type) //生成N个四则表达式
 	filepath = argv;
 	int l = filepath.length() - 14;
 	filepath.erase(l);
-	filepath += "puzzle1.txt";
+	filepath += "puzzle.txt";
 
 	int i, j, number_type, operator_num, L, t, index, m;
 	int left_brack_num = 0, right_bracket_num = 0, left_bracket_flag = 0;;
@@ -423,14 +424,16 @@ void PuzzleGenerate(char* argv, int N, char type) //生成N个四则表达式
 		else if (operator_num > 10) operator_num = 10;
 
 		number_type = rand() % 2; //number_type == 0 为整数题，number_type == 1 为真分数题
-		divide_flag = power_flag = 0;
-		left_brack_num = right_bracket_num = 0;
 
 		/************整数四则运算题目的生成**********/
 		if (number_type == 0) 
 		{
-			do {
-				labels[i] = 0;
+			labels[i] = 0;
+			do 
+			{
+				L = 0;
+				divide_flag = power_flag = 0;
+				left_brack_num = right_bracket_num = 0;
 				for (j = 0; j < operator_num; j++)
 				{
 					/**********随机生成左括号***********/
@@ -543,15 +546,18 @@ void PuzzleGenerate(char* argv, int N, char type) //生成N个四则表达式
 				{
 					puzzle_int[i][L++] = 107;
 				}
-			}while(check(puzzle_int[i], L, i, number_type) != 1);
+			}while (Check(puzzle_int[i], L, i, number_type) != 1);
 		}
 
 		/*********分数四则运算题目的生成**********/
 		else 
 		{
+			labels[i] = 1;
 			do
 			{
-				labels[i] = 1;
+				L = 0;
+				divide_flag = power_flag = 0;
+				left_brack_num = right_bracket_num = 0;
 				for (j = 0; j < operator_num; j++)
 				{
 					/******随机生成左括号******/
@@ -598,7 +604,7 @@ void PuzzleGenerate(char* argv, int N, char type) //生成N个四则表达式
 				{
 					puzzle_int[i][L++] = 107;
 				}
-			} while (check(puzzle_int[i], L, i, number_type) != 1);
+			} while (Check(puzzle_int[i], L, i, number_type) != 1);
 		}
 	}
 
