@@ -1,7 +1,7 @@
 /*
 -------------------------------------
 谢蜜雪 学号：1120161761
-日期：2019/1/12
+日期：2019/1/13
 实现功能：PuzzleGenerate.cpp的头文件
 -------------------------------------
 */
@@ -9,6 +9,8 @@
 #pragma once
 
 #include "fraction.h"
+
+//int stack_order[1000][600];
 
 int GetGCD(int a, int b);  //求分子a好分母b的最大公约数
 
@@ -26,6 +28,6 @@ int IntPartialResult(int A, int B, int sym); //两个整数的四则运算
 
 fraction& FractionPartialResult(fraction &A, fraction& B, int sym);  // 两个分数的四则运算
 
-int check(int puzzle[], int puzzle_len, int puzzle_num, int num_type);  //判断题目是否重复
+int Check(int puzzle[], int puzzle_len, int puzzle_num, int num_type);  //判断题目是否重复
 
 void PuzzleGenerate(char* argv, int N, char type);  //生成N个四则表达式
