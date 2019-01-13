@@ -1,10 +1,12 @@
 /*
 ------------------------
-¹¦ÄÜ£ºËÄÔòÔËËãÌâÄ¿Çó½â
-×÷Õß£ºÑî±ùç÷
-ÈÕÆÚ£º2019.01.12
+ä½œè€…ï¼šæ¨å†°çª
+æ—¥æœŸï¼š2019.01.13
+åŠŸèƒ½ï¼šå››åˆ™è¿ç®—é¢˜ç›®æ±‚è§£
 -------------------------
 */
+#include"stdafx.h"
+#include"Calculate.h"
 #include<iostream>
 #include<cstdio>
 #include<cstdlib>
@@ -17,37 +19,12 @@
 
 using namespace std;
 
-stack<long long int> Data; //Êı×Ö
+stack<long long int> Data; //æ•°å­—
 stack<char> Operator;  
-stack<long long int> Numerator;//·Ö×Ó
-stack<long long int> Denominator;//·ÖÄ¸
+stack<long long int> Numerator;//åˆ†å­
+stack<long long int> Denominator;//åˆ†æ¯
 string result;
-int PowModel = 0;//Ä¬ÈÏ³Ë·½Îª ^
-string userAnswer;
-
-#pragma region MainFunc
-bool CheckQuestion(string Question);
-void Clear();//Çå¿ÕÕ»
-void Calculate(string Question);
-void UserGUI();
-string Transform(int data);//½«ÊıÖµ×ª»»Îª×Ö·û´®
-#pragma endregion
-
-#pragma region Integer
-void ReadInt(string Question);
-void Integer();//+-*/^
-void CalInt();//È·±£OperatorÕ»Îª¿Õ
-string ToPower(string Question);//½« ** ×ª»»Îª ^
-#pragma endregion
-
-#pragma region Fraction
-void ReadFraction(string Question);
-int gcd(int x, int y);//×î´óÒòÔ¼Êı
-int lcm(int x, int y);//×îĞ¡¹«±¶Êı = Á½ÊıÏà³Ë / ×î´óÒòÔ¼Êı
-void Fraction();//+-*/
-void CalFraction();
-void Simple();//·ÖÊı×î¼ò»¯
-#pragma endregion
+int PowModel = 0;//é»˜è®¤ä¹˜æ–¹ä¸º ^
 
 bool CheckQuestion(string Question) {
 	int i = 0;
@@ -71,7 +48,7 @@ bool CheckQuestion(string Question) {
 }
 void ReadInt(string Question) {
 	for (int i = 0; Question[i] != '='; i++) {
-		//------------¿Õ¸ñ + ×óÀ¨ºÅ-----------
+		//------------ç©ºæ ¼ + å·¦æ‹¬å·-----------
 		if (Question[i] == ' ') {
 			continue;
 		}
@@ -79,7 +56,7 @@ void ReadInt(string Question) {
 			Operator.push('(');
 			continue;
 		}
-		//---------------Êı×Ö²¿·Ö---------------
+		//---------------æ•°å­—éƒ¨åˆ†---------------
 		int number = 0;
 		if (Question[i] >= '0' && Question[i] <= '9') {
 			while (Question[i] >= '0' && Question[i] <= '9') {
@@ -90,31 +67,31 @@ void ReadInt(string Question) {
 			Data.push(number);
 			continue;
 		}
-		//----------------ÔËËã·û + ¼ÆËã----------------
+		//----------------è¿ç®—ç¬¦ + è®¡ç®—----------------
 		if ((Question[i] < '0' || Question[i] > '9') && Question[i] != ' ') {
-			if (Question[i] == ')') {//µ±Ç°ÔËËã·ûÎªÓÒÀ¨ºÅ
+			if (Question[i] == ')') {//å½“å‰è¿ç®—ç¬¦ä¸ºå³æ‹¬å·
 				while (Operator.top() != '(') {
 					Integer();
 				}
 				Operator.pop();
 			}
-			else if (Question[i] == '^') {//µ±Ç°ÔËËã·ûÎª³Ë·½,Ö±½Ó·ÅÈëÕ»ÖĞ¼´¿É
+			else if (Question[i] == '^') {//å½“å‰è¿ç®—ç¬¦ä¸ºä¹˜æ–¹,ç›´æ¥æ”¾å…¥æ ˆä¸­å³å¯
 				Operator.push(Question[i]);
 			}
-			else if(Question[i] != '^'){//Èç¹ûµ±Ç°ÔËËã·û²»Îª³Ë·½
+			else if(Question[i] != '^'){//å¦‚æœå½“å‰è¿ç®—ç¬¦ä¸ä¸ºä¹˜æ–¹
 				if (Question[i] == '(') {
 					Operator.push(Question[i]);
 					continue;
 				}
-				while (!Operator.empty() && Operator.top() == '^') {//ÏÈ¼ÆËãÖ®Ç°ÔËËã·ûÀïµÄ³Ë·½£¬´ÓÓÒµ½×ó
+				while (!Operator.empty() && Operator.top() == '^') {//å…ˆè®¡ç®—ä¹‹å‰è¿ç®—ç¬¦é‡Œçš„ä¹˜æ–¹ï¼Œä»å³åˆ°å·¦
 					Integer();
 				}
-				if (!Operator.empty() &&( Operator.top() == '*' || Operator.top() == '/' ) ) {//µ±Õ»¶¥ÔªËØ²»Îª³Ë·½ºó£¬³Ë³ıºÅÓÅÏÈ
+				if (!Operator.empty() &&( Operator.top() == '*' || Operator.top() == '/' ) ) {//å½“æ ˆé¡¶å…ƒç´ ä¸ä¸ºä¹˜æ–¹åï¼Œä¹˜é™¤å·ä¼˜å…ˆ
 					while (!Operator.empty() && (Operator.top() != '+' && Operator.top() != '-' && Operator.top()!='(')) {
 						Integer();
 					}
 				}
-				if (!Operator.empty() && (Question[i] == '+' || Question[i] == '-')) {//Í¬Ò»ÓÅÏÈ¼¶×Ô×óÏòÓÒËã
+				if (!Operator.empty() && (Question[i] == '+' || Question[i] == '-')) {//åŒä¸€ä¼˜å…ˆçº§è‡ªå·¦å‘å³ç®—
 					while (!Operator.empty() && Operator.top() != '(') {
 						Integer();
 					}
@@ -126,24 +103,24 @@ void ReadInt(string Question) {
 }
 void ReadFraction(string Question) {
 	for (int i = 0; Question[i] != '='; i++) {
-		//---------------------À¨ºÅ´¦Àí-------------
-		if (Question[i] == '(') {   //×óÀ¨ºÅÖ±½ÓÈëÕ»
+		//---------------------æ‹¬å·å¤„ç†-------------
+		if (Question[i] == '(') {   //å·¦æ‹¬å·ç›´æ¥å…¥æ ˆ
 			Operator.push('(');
-			i++;//Ìø¹ıÖ®ºóµÄ¿Õ¸ñ
+			i++;//è·³è¿‡ä¹‹åçš„ç©ºæ ¼
 			continue;
 		}
-		if (Question[i] == ')') {//ÓÒÀ¨ºÅ²»ÈëÕ»£¬²¢»á¼ÆËãÖ±µ½µ¯³ö¾àÀëÕ»¶¥×î½üµÄÒ»¸ö×óÀ¨ºÅ
+		if (Question[i] == ')') {//å³æ‹¬å·ä¸å…¥æ ˆï¼Œå¹¶ä¼šè®¡ç®—ç›´åˆ°å¼¹å‡ºè·ç¦»æ ˆé¡¶æœ€è¿‘çš„ä¸€ä¸ªå·¦æ‹¬å·
 			while (!Operator.empty() && Operator.top() != '(') {
 				Fraction();
 			}
-			Operator.pop();//µ¯³ö×óÀ¨ºÅ
-			i++;//Ìø¹ıÖ®ºó¿Õ¸ñ
+			Operator.pop();//å¼¹å‡ºå·¦æ‹¬å·
+			i++;//è·³è¿‡ä¹‹åç©ºæ ¼
 			if (Question[i] == '=') {
 				return;
 			}
 			continue;
 		}
-		//--------------------·Ö×Ó·ÖÄ¸¼ÆËã---------------------
+		//--------------------åˆ†å­åˆ†æ¯è®¡ç®—---------------------
 		int number = 0;
 		int flag = 0;
 		while (Question[i] >= '0' && Question[i] <= '9') {
@@ -151,7 +128,7 @@ void ReadFraction(string Question) {
 			number = number * 10 + Question[i] - '0';
 			i++;
 		}
-		if (flag != 0 && Question[i] == '/') {//ºóÒ»Î»Îª / ÔòÎª·Ö×Ó
+		if (flag != 0 && Question[i] == '/') {//åä¸€ä½ä¸º / åˆ™ä¸ºåˆ†å­
 			Numerator.push(number);
 			continue;
 		}
@@ -159,21 +136,21 @@ void ReadFraction(string Question) {
 			Denominator.push(number);
 			continue;
 		}
-		//--------------------ÔËËã·ûÈëÕ» + ¼ÆËã-------------------------
+		//--------------------è¿ç®—ç¬¦å…¥æ ˆ + è®¡ç®—-------------------------
 		if (Question[i] == ' ') {
 			char before = Question[i - 1];
-			if (Operator.empty() || Operator.top() == '(') {//Èç¹ûÕ»Îª¿Õ£¬»òÕßÕ»¶¥ÔªËØÎª×óÀ¨ºÅ£¬ÄÇÃ´´ËÔËËã·ûÈëÕ»,È»ºóÌø¹ı
+			if (Operator.empty() || Operator.top() == '(') {//å¦‚æœæ ˆä¸ºç©ºï¼Œæˆ–è€…æ ˆé¡¶å…ƒç´ ä¸ºå·¦æ‹¬å·ï¼Œé‚£ä¹ˆæ­¤è¿ç®—ç¬¦å…¥æ ˆ,ç„¶åè·³è¿‡
 				Operator.push(before);
 				continue;
 			}
 			else {
 				if (!Operator.empty() && (before == '+' || before == '-')) {
-					while (!Operator.empty() && Operator.top() != '(') {//¼Ó¼õºÅÖ®Ç°µÄ³Ë³ı¼Ó¼õ¶¼ÒªÏÈËã
+					while (!Operator.empty() && Operator.top() != '(') {//åŠ å‡å·ä¹‹å‰çš„ä¹˜é™¤åŠ å‡éƒ½è¦å…ˆç®—
 						Fraction();
 					}
 					
 				}
-				else if (!Operator.empty() &&(before == '*' || before == '/')) {//³Ë³ıºÅÖ®Ç°µÄ³Ë³ıºÅÒªÏÈËã
+				else if (!Operator.empty() &&(before == '*' || before == '/')) {//ä¹˜é™¤å·ä¹‹å‰çš„ä¹˜é™¤å·è¦å…ˆç®—
 					if (!Operator.empty() && Operator.top() != '+' && Operator.top() != '-') {
 						Fraction();
 					}
@@ -202,7 +179,7 @@ void Integer() {
 		ans = temp2 / temp1;
 	}
 	else if (op == '^') {
-		ans = pow(temp2, temp1);
+		ans = long long int(pow(temp2, temp1));
 	}
 	Data.top() = ans;
 	Operator.pop();
@@ -211,7 +188,7 @@ void CalInt() {
 	while (Data.size() > 1 && Operator.size() > 0) {
 		Integer();
 	}
-	result = Transform(Data.top());
+	result = Transform(int(Data.top()));
 }
 int gcd(int x, int y) {
 	return y == 0 ? x : gcd(y, x%y);
@@ -221,23 +198,23 @@ int lcm(int x, int y) {
 }
 void Fraction() {
 	int numerator1 = 1;
-	numerator1 = Numerator.top();
+	numerator1 = int(Numerator.top());
 	Numerator.pop();
 	int numerator2 = 1;
-	numerator2 = Numerator.top();
+	numerator2 = int(Numerator.top());
 	Numerator.pop();
 	int numerator3 = 1;
 
 	int denominator1 = 1;
-	denominator1 = Denominator.top();
+	denominator1 = int(Denominator.top());
 	Denominator.pop();
 	int denominator2 = 1;
-	denominator2 = Denominator.top();
+	denominator2 = int(Denominator.top());
 	Denominator.pop();
 	int denominator3 = 1;
 
 	char op = Operator.top();
-	//------------¼Ó¼õ³Ë³ı-----------
+	//------------åŠ å‡ä¹˜é™¤-----------
 	if (op == '+' || op == '-') {
 		denominator3 = lcm(denominator1, denominator2);
 		numerator1 *= denominator3 / denominator1;
@@ -257,7 +234,7 @@ void Fraction() {
 		numerator3 = numerator2 * denominator1;
 		denominator3 = denominator2 * numerator1;
 	}
-	//-------------Èô½á¹ûÎª¸ºÊı---------
+	//-------------è‹¥ç»“æœä¸ºè´Ÿæ•°---------
 	if (numerator3 * denominator3 < 0) {
 		numerator3 = numerator3 < 0 ? numerator3 : 0 - numerator3;
 		denominator3 = abs(denominator3);
@@ -268,7 +245,7 @@ void Fraction() {
 	Operator.pop();
 }
 void Simple() {
-	int gg = gcd(Numerator.top(), Denominator.top());;
+	int gg = gcd(int(Numerator.top()), int(Denominator.top()));;
 	gg = abs(gg);
 	Numerator.top() /= gg;
 	Denominator.top() /= gg;
@@ -277,25 +254,25 @@ void CalFraction() {
 	while (!Operator.empty()) {
 		Fraction();
 	}
-	//---------ÌØÊâÇé¿ö-------------
-	if (Numerator.top() == 0) {//·Ö×ÓÎª 0
+	//---------ç‰¹æ®Šæƒ…å†µ-------------
+	if (Numerator.top() == 0) {//åˆ†å­ä¸º 0
 		result = "0";
 		return;
 	}
 	
 	int temp = 0;
-	temp = Numerator.top() / Denominator.top();
+	temp = int(Numerator.top() / Denominator.top());
 
-	if (abs(temp) == 1 && (abs(Numerator.top()) - abs(Denominator.top()) == 0)) { //½á¹ûÎª ¡À1
+	if (abs(temp) == 1 && (abs(Numerator.top()) - abs(Denominator.top()) == 0)) { //ç»“æœä¸º Â±1
 		result = Transform(temp);
 		return;
 	}
 
 	Numerator.top() = Numerator.top() % Denominator.top();
 	Simple();
-	//------------½á¹ûÎªÕæ·ÖÊı---------
-	result = Transform(Numerator.top()) + "/" + Transform(Denominator.top());
-	//------------½á¹ûÎª¼Ù·ÖÊı----------
+	//------------ç»“æœä¸ºçœŸåˆ†æ•°---------
+	result = Transform(int(Numerator.top())) + "/" + Transform(int(Denominator.top()));
+	//------------ç»“æœä¸ºå‡åˆ†æ•°----------
 	if (abs(temp) > 0) {
 		result = Transform(temp) + "+" + result;
 	}
@@ -322,7 +299,7 @@ string Transform(int data) {
 		temp = 1;
 	}
 	data = abs(data);
-	if (data == 0) { //¿¼ÂÇÎª0µÄÇé¿ö
+	if (data == 0) { //è€ƒè™‘ä¸º0çš„æƒ…å†µ
 		return "0";
 	}
 	while (data != 0) {
@@ -339,7 +316,9 @@ string Transform(int data) {
 }
 string ToPower(string Question) {
 	string Power;
-	for (int i = 0,j = 0; i < Question.length(); i++) {
+	int i, j=0;
+	int len = Question.length();
+	for (i = 0,j = 0; i < len; i++) {
 		if (Question[i] != '*') {
 			Power[j] = Question[i];
 			j++;
@@ -354,7 +333,7 @@ string ToPower(string Question) {
 				j++;
 			}
 			else {
-				Power[j] == '^';
+				Power[j] = '^';
 				j++;
 			}
 		}
@@ -375,16 +354,18 @@ void Calculate(string Question) {
 		CalFraction();
 	}
 }
-void UserGUI() {
+void UserGUI(string user_answer) {
+	string answer;
 	int chance = 2;
+	answer = user_answer;
 	while (chance) {
-		if (userAnswer == result) {
+		if (answer == result) {
 			cout << "Rright!" << endl;
 			break;
 		}
 		else {
 			cout << "Wrong! You have " << chance << " chance to answer." << endl;
-			cin >> userAnswer;
+			cin >> answer;
 		}
 		chance--;
 	}
@@ -392,24 +373,4 @@ void UserGUI() {
 		cout << "So Sorry,This is right answer:" << result << endl;
 	}
 	cout << endl;
-}
-int main()
-{
-	string Question;
-	ifstream inf;
-	inf.open("puzzle1.txt");
-	if (inf.fail() == true){
-		cout << "Fail to open file!" << endl;
-		}
-	int count = 0;//ÌâºÅ
-	while (getline(inf, Question))
-	{
-		cout << "No." << count++ << ": " << Question << endl;
-		cout << "Your answer:";
-		cin >> userAnswer;
-		Calculate(Question);
-		UserGUI();
-	}
-	system("pause");
-	return 0;
 }
