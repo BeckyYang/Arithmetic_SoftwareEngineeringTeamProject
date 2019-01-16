@@ -1,4 +1,9 @@
-﻿using System;
+/*--------------------
+功能：分数类
+作者：谢蜜雪
+日期：2019.01.15
+--------------------*/
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
