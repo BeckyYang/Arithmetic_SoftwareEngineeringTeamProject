@@ -214,7 +214,7 @@ namespace ArithmeticGUI
                             {
                                 stack_operator.Push(puzzle[i]);
                             }
-                            else
+                            else if (puzzle[i] >= 100 && puzzle[i] <= 107)
                             {
                                 //遇到运算符，且运算符栈为空或者栈顶运算符优先级小于当前运算符优先级,运算符直接进运算符栈
                                 if (stack_operator.Count() == 0 || (stack_operator.Count() != 0 && priority[stack_operator.Peek() - 100] < priority[puzzle[i] - 100])) stack_operator.Push(puzzle[i]);
@@ -351,7 +351,7 @@ namespace ArithmeticGUI
                             } 
                             stack_operator.Pop(); //弹出左括号
                         }
-                        else
+                        else if (puzzle[i] >= 100 && puzzle[i] <= 107)
                         {
                             //遇到运算符，且运算符栈为空或者栈顶运算符优先级小于当前运算符优先级,运算符直接进运算符栈
                             if (stack_operator.Count() == 0 || (stack_operator.Count() != 0 && priority[stack_operator.Peek() - 100] < priority[puzzle[i] - 100])) stack_operator.Push(puzzle[i]);
