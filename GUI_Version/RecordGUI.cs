@@ -22,6 +22,7 @@ namespace ArithmeticGUI
             InitializeComponent();
             tb_record.Text = null;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            btn_query.Enabled = true;
         }
 
          private void btn_q_Click(object sender, EventArgs e)
@@ -36,7 +37,7 @@ namespace ArithmeticGUI
         
         private void btn_query_Click(object sender, EventArgs e)
         {
-            
+            btn_query.Enabled = false;
             lab_user_name.Text = MainGUI.user_name;
             lab_score.Text = Convert.ToString(PuzzlesGUI.score);
             if(PuzzlesGUI.History[0] == null)
