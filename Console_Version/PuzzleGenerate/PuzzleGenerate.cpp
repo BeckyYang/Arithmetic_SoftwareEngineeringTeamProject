@@ -38,6 +38,7 @@ auto bracket_num_distribution_dice = bind(bracket_num_distribution, seed);
 
 int GetGCD(int a, int b) //求分子a好分母b的最大公约数
 {
+	if (a == 0 || b == 0) return 1;
 	return (a % b == 0) ? b : GetGCD(b, a%b);
 }
 
