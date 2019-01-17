@@ -184,7 +184,7 @@ int Check(int puzzle[], int puzzle_len, int puzzle_num, int num_type) //判断�
 					{
 						stack_operator.push(puzzle[i]);
 					}
-					else
+					else if(puzzle[i]>=100 && puzzle[i] <= 107)
 					{
 						//遇到运算符，且运算符栈为空或者栈顶运算符优先级小于当前运算符优先级,运算符直接进运算符栈
 						if (stack_operator.empty() == true || (stack_operator.empty() == false && priority[stack_operator.top()-100] < priority[puzzle[i]-100])) stack_operator.push(puzzle[i]);
@@ -297,7 +297,7 @@ int Check(int puzzle[], int puzzle_len, int puzzle_num, int num_type) //判断�
 					} while (stack_operator.empty() == false && (s = stack_operator.top()) != 106);
 					stack_operator.pop(); //弹出左括号
 				}
-				else
+				else if(puzzle[i]>=100 && puzzle[i] <= 107)
 				{
 					//遇到运算符，且运算符栈为空或者栈顶运算符优先级小于当前运算符优先级,运算符直接进运算符栈
 					if (stack_operator.empty() == true || (stack_operator.empty() == false && priority[stack_operator.top() - 100] < priority[puzzle[i] - 100])) stack_operator.push(puzzle[i]);
