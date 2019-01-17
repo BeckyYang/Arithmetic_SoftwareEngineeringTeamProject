@@ -33,7 +33,7 @@ namespace ArithmeticGUI
 
         public static int FracionGetGCD(int a, int b)
         {
-            if (b == 0 || a == 0) return 1;
+            if(b == 0 || a == 0) return 1;
             return (a % b == 0) ? b : FracionGetGCD(b, a % b);
         }
 
