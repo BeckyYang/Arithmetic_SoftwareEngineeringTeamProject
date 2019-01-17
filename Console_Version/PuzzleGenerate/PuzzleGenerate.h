@@ -5,7 +5,6 @@
 实现功能：PuzzleGenerate.cpp的头文件
 -------------------------------------
 */
-
 #pragma once
 
 #include "fraction.h"
