@@ -43,6 +43,7 @@ namespace ArithmeticGUI
 
         int GetGCD(int a, int b) //求分子a好分母b的最大公约数
         {
+            if (b == 0 || a == 0) return 1;
             return (a % b == 0) ? b : GetGCD(b, a % b);
         }
 
